@@ -1,11 +1,7 @@
 module CreatureActions
 
   def hit( damage )
-    p_up = rand( charisma )
-    if p_up % 9 == 7
-      @life += p_up / 4
-      puts "[#{ self.class } magick powers up #{ p_up }!]"
-    end
+    @life += magick_power_up
     @life -= damage
     puts "[#{ self.class } has died.]" if @life <= 0
   end
@@ -24,6 +20,15 @@ module CreatureActions
       puts "[Your enemy hit with #{ enemy_hit } points of damage!]"
       self.hit( enemy_hit )
     end
+  end
+
+  def magick_power_up
+    power_up = Kernel.rand( self.charisma )
+    if power_up % 9 == 7
+      puts "[#{ self.class } magick powers up #{ power_up }!]"
+      return power_up / 4
+    end
+    return 0
   end
 
 end
