@@ -1,20 +1,23 @@
 require "creature_actions"
 
-class DummyClass
+class DummyCreature
   include CreatureActions
-  attr_accessor :life
+  attr_accessor :life, :strength, :weapon
   attr_reader :charisma
 
   def initialize
     @life = 100
-    @charisma = 100
+    @charisma = 73
+    @strength = 52
+    @weapon = 31
   end
 end
 
 describe CreatureActions do
 
   before(:each) do
-    @creature = DummyClass.new
+    @creature = DummyCreature.new
+    allow(@creature).to receive(:puts).and_return("")
   end
 
   describe "#hit" do
@@ -63,21 +66,47 @@ describe CreatureActions do
 
   describe "#fight" do
 
-    it "exists" do
-      expect(@creature).to respond_to(:fight)
+    before(:each) do
+      @opponent = DummyCreature.new
+    end
+
+    it "cannot fight if it is dead" do
+      @creature.life = 0
+
+      @creature.fight(@opponent, 100)
+
+      expect(@opponent.life).to eq 100
+    end
+
+    it "deals no damage if the attacker has no strength and no weapon power" do
+      allow(Kernel).to receive(:rand).and_return(0)
+      @creature.strength = 0
+      @creature.weapon = 0
+
+      @creature.fight(@opponent, @creature.weapon)
+
+      expect(@opponent.life).to eq 100
+    end
+
+    it "deals damage based on the attacker's strength and weapon power" do
+      allow(Kernel).to receive(:rand).and_return(10,0)
+
+      @creature.fight(@opponent, @creature.weapon)
+
+      expect(@opponent.life).to eq 90
+    end
+
+    it "uses the default weapon attribute if no specific weapon is given" do
+      allow(Kernel).to receive(:rand).and_return(67,0)
+
+      @creature.fight(@opponent)
+
+      expect(@opponent.life).to eq 33
     end
 
   end
 
   describe "#magick_power_up" do
-
-    before(:each) do
-      allow(@creature).to receive(:puts).and_return("")
-    end
-
-    it "returns 0 if no charisma is given" do
-      expect(@creature.magick_power_up).to eq 0
-    end
 
     it "returns 0 if the randomly generated charisma is 0" do
       allow(Kernel).to receive(:rand).and_return(0)

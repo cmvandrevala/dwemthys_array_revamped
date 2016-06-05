@@ -3,23 +3,15 @@ module CreatureActions
   def hit( damage )
     @life += magick_power_up
     @life -= damage
-    puts "[#{ self.class } has died.]" if @life <= 0
   end
 
-  def fight( enemy, weapon )
+  def fight( enemy, weapon = @weapon)
     if life <= 0
       puts "[#{ self.class } is too dead to fight!]"
       return
     end
-    your_hit = rand( strength + weapon )
-    puts "[You hit with #{ your_hit } points of damage!]"
-    enemy.hit( your_hit )
-    p enemy
-    if enemy.life > 0
-      enemy_hit = rand( enemy.strength + enemy.weapon )
-      puts "[Your enemy hit with #{ enemy_hit } points of damage!]"
-      self.hit( enemy_hit )
-    end
+    attack(self, enemy)
+    attack(enemy, self) if enemy.life > 0
   end
 
   def magick_power_up
@@ -29,6 +21,16 @@ module CreatureActions
       return power_up / 4
     end
     return 0
+  end
+
+  private
+
+  def attack(attacker, defender)
+    hit_strength = Kernel.rand( attacker.strength + attacker.weapon )
+    hit_strength = 0 if attacker.strength == 0 && attacker.weapon == 0
+    defender.hit( hit_strength )
+    puts "[#{attacker.class} hit #{defender.class} with #{ hit_strength } points of damage!]"
+    puts "[#{ self.class } has died.]" if @life <= 0
   end
 
 end
