@@ -2,6 +2,10 @@ source "https://rubygems.org"
 
 ruby "2.3.1"
 
-gem "rspec"
 gem "rake"
-gem "guard-rspec"
+
+group :test do
+  gem "rspec"
+  gem "guard-rspec"
+  gem 'simplecov', :require => false
+end
