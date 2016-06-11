@@ -10,7 +10,7 @@ module CreatureActions
       puts "[#{ self.class } is too dead to fight!]"
       return
     end
-    attack(self, enemy)
+    attack(self, enemy, weapon)
     attack(enemy, self) if enemy.life > 0
   end
 
@@ -25,9 +25,9 @@ module CreatureActions
 
   private
 
-  def attack(attacker, defender)
-    hit_strength = Kernel.rand( attacker.strength + attacker.weapon )
-    hit_strength = 0 if attacker.strength == 0 && attacker.weapon == 0
+  def attack(attacker, defender, weapon = attacker.weapon)
+    hit_strength = Kernel.rand( attacker.strength + weapon )
+    hit_strength = 0 if attacker.strength == 0 && weapon == 0
     defender.hit( hit_strength )
     puts "[#{attacker.class} hit #{defender.class} with #{ hit_strength } points of damage!]"
     puts "[#{ self.class } has died.]" if @life <= 0

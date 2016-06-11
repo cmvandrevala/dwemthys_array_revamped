@@ -1,3 +1,6 @@
+require_relative "./creature_actions"
+require_relative "./creature"
+
 class Rabbit < Creature
   traits :bombs
 
@@ -12,11 +15,11 @@ class Rabbit < Creature
   end
 
   def /( enemy )
-    fight( enemy, rand( 4 + ( ( enemy.life % 10 ) ** 2 ) ) )
+    fight( enemy, Kernel.rand( 4 + ( ( enemy.life % 10 ) ** 2 ) ) )
   end
 
   def %( enemy )
-    lettuce = rand( charisma )
+    lettuce = Kernel.rand( charisma )
     puts "[Healthy lettuce gives you #{ lettuce } life points!!]"
     @life += lettuce
     fight( enemy, 0 )
